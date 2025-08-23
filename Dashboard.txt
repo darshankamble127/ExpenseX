@@ -1,0 +1,48 @@
+
+    const data = {
+        "2024-6-15": {
+            total: 150, transactions: [
+                {
+                    type: "expense", category: "Food", amount: 50, account: "Card", imageUrl: "https://notebook-covers.s3.us-west-2.amazonaws.com/d7b60dc582c57e0ba5043bd4be90a158", isIncludedInTotal: true
+                },
+                {
+                    type: "income", category: "Save", amount: 590, account: "Saving", imageUrl: "https://notebook-covers.s3.us-west-2.amazonaws.com/d7b60dc582c57e0ba5043bd4be90a158", isIncludedInTotal: false
+                },
+                {
+                    type: "expense", category: "Xerox", amount: 15, account: "Card", imageUrl: "https://notebook-covers.s3.us-west-2.amazonaws.com/d7b60dc582c57e0ba5043bd4be90a158", isIncludedInTotal: true
+                },
+                {
+                    type: "expense", category: "Transport", amount: 20, account: "Cash", imageUrl: "https://notebook-covers.s3.us-west-2.amazonaws.com/d7b60dc582c57e0ba5043bd4be90a158", isIncludedInTotal: true
+                },
+                {
+                    type: "expense", category: "Snacks", amount: 25, account: "Card", imageUrl: "https://notebook-covers.s3.us-west-2.amazonaws.com/d7b60dc582c57e0ba5043bd4be90a158", isIncludedInTotal: true
+                },
+                {
+                    type: "expense", category: "Stationary", amount: 20, account: "Cash", imageUrl: "https://notebook-covers.s3.us-west-2.amazonaws.com/d7b60dc582c57e0ba5043bd4be90a158", isIncludedInTotal: true
+                },
+                {
+                    type: "expense", category: "Miscellaneous", amount: 10, account: "Card", imageUrl: "https://notebook-covers.s3.us-west-2.amazonaws.com/d7b60dc582c57e0ba5043bd4be90a158", isIncludedInTotal: true
+                },
+            ]
+        },
+        "2024-6-16": {
+            total: 200, transactions: [
+                {
+                    type: "expense", category: "Groceries", amount: 100, account: "Card", imageUrl: "https://notebook-covers.s3.us-west-2.amazonaws.com/d7b60dc582c57e0ba5043bd4be90a158", isIncludedInTotal: true
+                },
+                {
+                    type: "income", category: "Freelance", amount: 300, account: "Saving", imageUrl: "https://notebook-covers.s3.us-west-2.amazonaws.com/d7b60dc582c57e0ba5043bd4be90a158", isIncludedInTotal: false
+                },
+                {
+                    type: "expense", category: "Dining Out", amount: 50, account: "Card", imageUrl: "https://notebook-covers.s3.us-west-2.amazonaws.com/d7b60dc582c57e0ba5043bd4be90a158", isIncludedInTotal: true
+                },
+                {
+                    type: "expense", category: "Entertainment", amount: 30, account: "Cash", imageUrl: "https://notebook-covers.s3.us-west-2.amazonaws.com/d7b60dc582c57e0ba5043bd4be90a158", isIncludedInTotal: true
+                },
+                {
+                    type: "expense", category: "Utilities", amount: 20, account: "Card", imageUrl: "https://notebook-covers.s3.us-west-2.amazonaws.com/d7b60dc582c57e0ba5043bd4be90a158", isIncludedInTotal: true
+                },
+            ]
+        },
+
+    };
