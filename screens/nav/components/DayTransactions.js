@@ -1,5 +1,5 @@
 import { View, Text, StyleSheet } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import Card from "./Card";
 
 export default function DayTransactions({ transactions = [] }) {
@@ -10,6 +10,11 @@ export default function DayTransactions({ transactions = [] }) {
       </View>
     );
   }
+
+  useEffect(() => {
+  console.log("DayTransactions props:", transactions);
+  }, [])
+  
 
   return (
     <View style={styles.CardContainer}>
