@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useCallback, useState } from "react";
 import {
     View,
     Text,
@@ -10,6 +10,7 @@ import {
 import Card from "./components/AccountCard";
 import { MaterialIcons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useFocusEffect } from "@react-navigation/native";
 
 const STORAGE_KEY = "@accounts_data";
 
@@ -21,7 +22,7 @@ export default function Accounts() {
             const stored = await AsyncStorage.getItem(STORAGE_KEY);
             if (stored) {
                 setAccounts(JSON.parse(stored));
-                console.log("Loaded accounts from storage.", JSON.parse(stored));
+                // console.log("Loaded accounts from storage.", JSON.parse(stored));
             } else {
                 // If no accounts in storage, preload with default
                 const defaultAccounts = [
@@ -80,6 +81,13 @@ export default function Accounts() {
     useEffect(() => {
         loadAccounts();
     }, []);
+
+    useFocusEffect(
+        useCallback(() => {
+            loadAccounts();
+        }, [])
+    );
+
 
 
     //   accounts!=AsyncStorage.getItem(STORAGE_KEY))

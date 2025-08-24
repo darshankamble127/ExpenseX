@@ -10,7 +10,7 @@ export default function Card({ title, debitFrom, cost, imageUrl, type, notes}) {
   };
 
   useEffect(() => {
-    console.log("Card props:", { title, debitFrom, cost, imageUrl, type, notes });
+    // console.log("Card props:", { title, debitFrom, cost, imageUrl, type, notes });
   }, [])
   
 

@@ -114,8 +114,10 @@ export default function Records() {
                             key={index}
                             style={[
                                 styles.dateBox,
+                                !date && { borderWidth: 0 }, // no border for empty slots
                                 isSelected && styles.selectedBox,
                             ]}
+                            
                             onPress={() => date && setSelectedDate(date)}
                             activeOpacity={0.7}
                         >
@@ -133,8 +135,8 @@ export default function Records() {
                             {/* {hasData ? <Text style={{ fontSize: 10, color: "green" }}>●</Text> : null} */}
                             {/* Show total for the day */}
                             {hasData ? (
-                                <Text style={{ fontSize: 13,textAlign:"center",paddingTop:4, color: data[fullDateKey].total >= 0 ? "green" : "#ff7171ff" }}>
-                                    {data[fullDateKey].total>=0?`+₹${data[fullDateKey].total}`:`-₹${Math.abs(data[fullDateKey].total)}`}
+                                <Text style={{ fontSize: 13,textAlign:"center",paddingTop:4, color: data[fullDateKey].total >= 0 ? "green" : "#be1515ff" }}>
+                                    {data[fullDateKey].total>=0?`+ ₹${data[fullDateKey].total}`:`- ₹${Math.abs(data[fullDateKey].total)}`}
                                 </Text>
                             ) : null}
                         </TouchableOpacity>
@@ -157,8 +159,8 @@ export default function Records() {
                     <Text style={{ fontSize: 16, fontWeight: '600' }}>No date selected</Text>
                 )}
                 <Text style={{ fontSize: 15, fontWeight: '600'}}>TOTAL:
-                <Text style={{ fontSize: 15, fontWeight: '600', color: selectedDayData ? (selectedDayData.total >= 0 ? "green" : "#ff7171ff") : "#000" }}>
-                     {selectedDayData ? selectedDayData.total>0?` +₹${selectedDayData.total}`:` -₹${selectedDayData.total}` : 0}
+                <Text style={{ fontSize: 15, fontWeight: '600', color: selectedDayData ? (selectedDayData.total >= 0 ? "green" : "#be1515ff") : "#000" }}>
+                     {selectedDayData ? selectedDayData.total>0?` +₹${selectedDayData.total}`:` -₹${Math.abs(selectedDayData.total)}` : 0}
                 </Text>
                 </Text>
             </View>

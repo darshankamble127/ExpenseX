@@ -50,7 +50,7 @@ export default function TransactionModal({ modalVisible, setModalVisible, onSave
             0
         );
         data[dateKey] = { transactions: updatedTransactions, total };
-        console.log("Updated data:", data);
+        // console.log("Updated data:", data);
         // Write back to AsyncStorage
         try {
             await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(data));
@@ -209,10 +209,10 @@ export default function TransactionModal({ modalVisible, setModalVisible, onSave
                     {/* Buttons */}
                     <View style={styles.btnRow}>
                         <TouchableOpacity style={styles.closeBtn} onPress={() => setModalVisible(false)}>
-                            <Text style={{ color: "#fff" }}>Cancel</Text>
+                            <Text style={{ color: "#000000ff" }}>Cancel</Text>
                         </TouchableOpacity>
                         <TouchableOpacity style={styles.saveBtn} onPress={handleSave}>
-                            <Text style={{ color: "#fff" }}>Save</Text>
+                            <Text style={{ color: "#ffffffff" }}>Save</Text>
                         </TouchableOpacity>
                     </View>
                 </View>
@@ -306,7 +306,9 @@ const styles = StyleSheet.create({
         marginTop: 15,
     },
     closeBtn: {
-        backgroundColor: "gray",
+        // backgroundColor: "gray",
+        borderColor:"#ccc",
+        borderWidth:1,
         padding: 12,
         // borderRadius: 8,
         flex: 1,
@@ -314,7 +316,9 @@ const styles = StyleSheet.create({
         alignItems: "center",
     },
     saveBtn: {
-        backgroundColor: "black",
+        borderColor:"#000000ff",
+        borderWidth:1,
+        backgroundColor: "#000000ff",
         padding: 12,
         // borderRadius: 8,
         flex: 1,

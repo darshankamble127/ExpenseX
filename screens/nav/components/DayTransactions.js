@@ -12,7 +12,7 @@ export default function DayTransactions({ transactions = [] }) {
   }
 
   useEffect(() => {
-  console.log("DayTransactions props:", transactions);
+  // console.log("DayTransactions props:", transactions);
   }, [])
   
 
