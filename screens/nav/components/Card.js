@@ -1,13 +1,18 @@
 import { MaterialIcons } from "@expo/vector-icons";
-import React, { useState } from "react";
+import React, { use, useEffect, useState } from "react";
 import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
 
- export default function  Card  ({ title, debitFrom, cost, imageUrl }) {
+export default function Card({ title, debitFrom, cost, imageUrl, type, notes}) {
   const [imageError, setImageError] = useState(false);
 
   const handleImageError = () => {
     setImageError(true);
   };
+
+  useEffect(() => {
+    console.log("Card props:", { title, debitFrom, cost, imageUrl, type, notes });
+  }, [])
+  
 
   return (
     <View style={styles.card}>
@@ -25,7 +30,7 @@ import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
         </View>
         <View style={styles.lrs}>
           <Text style={styles.title}>{title}</Text>
-          <Text style={styles.value}>Debited from {debitFrom}</Text>
+          <Text style={styles.value}>{type=="income"?`Credited to ${debitFrom}`:`Debited from ${debitFrom}`}</Text>
         </View>
       </View>
       <View style={styles.rightSide}>
@@ -38,7 +43,9 @@ import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
         </TouchableOpacity> */}
 
         <View style={[styles.tab]}>
-          <Text style={styles.expenses}>{cost}</Text>
+          <Text style={type == "income" ? styles.income : styles.expenses}>
+            {type == "income" ? `+₹${cost}` : `-₹${Math.abs(cost)}`}
+          </Text>
         </View>
       </View>
     </View>
@@ -85,23 +92,40 @@ const styles = StyleSheet.create({
     color: "#555",
   },
   lls: {
-    padding: 5,
+    paddingHorizontal: 5,
+    paddingVertical: 5,
     borderWidth: 1,
-    borderColor: "#212224",
+    borderColor: "#000000ff",
     marginRight: 10,
     borderRadius: 0, // 25 Make it round
   },
+  lls2: {
+    // padding: 5,
+    borderRightWidth: 1,
+    borderColor: "#ccc",
+    // width: 30,
+    // height: 30,
+    marginRight: 10,
+    padding: 4.5,
+  },
   image: {
-    width: 30,
-    height: 30,
+    width: 40,
+    height: 40,
   },
   errorText: {
     fontSize: 14,
     color: "red",
   },
   expenses: {
-    fontSize: 17,
+    fontSize: 15,
     // fontWeight: "bold",
-    color: "#c60000",
+    color: "#bb0303ff",
+    fontWeight: '600'
+  },
+  income: {
+    fontSize: 15,
+    // fontWeight: "bold",
+    color: "#107503ff",
+    fontWeight: '600'
   },
 });

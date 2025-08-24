@@ -1,6 +1,7 @@
-import React, { useState } from "react";
-import { View, Text, TextInput, TouchableOpacity, Modal, StyleSheet, Switch } from "react-native";
+import React, { useEffect, useState } from "react";
+import { View, Text, TextInput, TouchableOpacity, Modal, StyleSheet, Switch, Image } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { applyTxToAccounts } from "./applyTxToAccounts";
 
 const STORAGE_KEY = "transactions";
 
@@ -8,7 +9,8 @@ export default function TransactionModal({ modalVisible, setModalVisible, onSave
     const [type, setType] = useState("expense");
     const [category, setCategory] = useState("");
     const [amount, setAmount] = useState("");
-    const [account, setAccount] = useState("");
+    const [account, setAccount] = useState("Card");
+    const [accounts, setAccounts] = useState([]);
     const [notes, setNotes] = useState(""); // New notes field
     const [isIncludedInTotal, setIsIncludedInTotal] = useState(true);
 
@@ -20,7 +22,7 @@ export default function TransactionModal({ modalVisible, setModalVisible, onSave
             category,
             amount: parseFloat(amount),
             account,
-            notes, 
+            notes,
             date: now.toLocaleDateString(),
             time: now.toLocaleTimeString(),
             isIncludedInTotal,
@@ -30,9 +32,11 @@ export default function TransactionModal({ modalVisible, setModalVisible, onSave
         // Read existing data
         let data = {};
         try {
-            const stored = await AsyncStorage.getItem(STORAGE_KEY);
+            const stored = await AsyncStorage.getItem("STORAGE_KEY");
             if (stored) {
                 data = JSON.parse(stored);
+
+
             }
         } catch (err) {
             console.log("Error reading AsyncStorage:", err);
@@ -50,6 +54,9 @@ export default function TransactionModal({ modalVisible, setModalVisible, onSave
         // Write back to AsyncStorage
         try {
             await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+            // if it is stored successfully then add to account balance
+            await applyTxToAccounts(newTransaction); // <-- add this line
+
         } catch (err) {
             console.log("Error writing AsyncStorage:", err);
         }
@@ -58,11 +65,21 @@ export default function TransactionModal({ modalVisible, setModalVisible, onSave
         // Reset form
         setCategory("");
         setAmount("");
-        setAccount("");
+        setAccount("Card");
         setNotes(""); // Reset notes
         setType("expense");
         setIsIncludedInTotal(true);
     };
+    const accCall =async() =>{
+        const stored = await AsyncStorage.getItem("@accounts_data");
+        if (stored)
+            setAccounts(JSON.parse(stored));
+    }
+
+    useEffect( () => {
+        accCall();
+    }, [])
+
 
     return (
         <Modal visible={modalVisible} transparent animationType="slide">
@@ -72,7 +89,6 @@ export default function TransactionModal({ modalVisible, setModalVisible, onSave
 
                     {/* Type */}
                     <View style={styles.row}>
-                        <Text style={styles.label}>Type:</Text>
                         <TouchableOpacity
                             style={[styles.chip, type === "expense" && styles.chipActive]}
                             onPress={() => setType("expense")}
@@ -91,37 +107,68 @@ export default function TransactionModal({ modalVisible, setModalVisible, onSave
                         </TouchableOpacity>
                     </View>
 
-                    {/* Category */}
-                    <TextInput
-                        placeholder="Category (e.g. Food)"
-                        value={category}
-                        onChangeText={setCategory}
-                        style={styles.input}
-                    />
-
-                    {/* Amount */}
+                    {/* Amount at bottom */}
                     <TextInput
                         placeholder="Amount"
                         value={amount}
                         onChangeText={setAmount}
                         keyboardType="numeric"
-                        style={styles.input}
+                        style={[styles.input, { marginBottom: 16 }]}
                     />
 
-                    {/* Account */}
-                    <TextInput
-                        placeholder="Account (e.g. Card)"
-                        value={account}
-                        onChangeText={setAccount}
-                        style={styles.input}
-                    />
 
-                    {/* Notes */}
+                    {/* Category with image */}
+                    <View style={styles.inputRow}>
+                        <View style={styles.lls}>
+                            <Image
+                                source={{ uri: "https://notebook-covers.s3.us-west-2.amazonaws.com/d7b60dc582c57e0ba5043bd4be90a158" }}
+                                style={styles.icon}
+                            />
+                        </View>
+                        <TextInput
+                            placeholder="Category (e.g. Food)"
+                            value={category}
+                            onChangeText={setCategory}
+                            style={[styles.input, { flex: 1 }]}
+                        />
+                    </View>
+
+                    {/* Account chips with image */}
+                    <Text style={styles.label}>Account:</Text>
+                    <View style={styles.row}>
+                        {accounts.map((acc, index) => (
+                            <TouchableOpacity
+                                key={index}
+                                style={[
+                                    styles.chip2,
+                                    account === acc.name && styles.chipActive,
+                                    { flexDirection: "row", alignItems: "center" },
+                                ]}
+                                onPress={() => setAccount(acc.name)}
+                            >
+                                <View style={styles.lls2}>
+                                    <Image
+                                        source={{ uri: acc.imageUrl }}
+                                        style={styles.iconSmall}
+                                    />
+                                </View>
+                                <Text
+                                    style={account === acc.name ? styles.chipTextActive : styles.chipText}
+                                >
+                                    {acc.name}
+                                </Text>
+                            </TouchableOpacity>
+                        ))}
+
+                    </View>
+
+                    {/* Notes textarea */}
                     <TextInput
                         placeholder="Notes"
                         value={notes}
                         onChangeText={setNotes}
-                        style={styles.input}
+                        style={[styles.inputbox, { height: 90 }]}
+                        multiline={true}
                     />
 
                     {/* Include in total */}
@@ -132,6 +179,7 @@ export default function TransactionModal({ modalVisible, setModalVisible, onSave
                             onValueChange={setIsIncludedInTotal}
                         />
                     </View>
+
 
                     {/* Buttons */}
                     <View style={styles.btnRow}>
@@ -158,27 +206,39 @@ const styles = StyleSheet.create({
     modalContent: {
         width: "85%",
         backgroundColor: "#fff",
-        borderRadius: 12,
+        // borderRadius: 12,
         padding: 20,
+        // borderColor: "#000000ff",
+        // borderWidth: 1,
         elevation: 10,
     },
     title: {
         fontSize: 18,
         fontWeight: "bold",
         marginBottom: 15,
-        textAlign: "center",
+        // textAlign: "center",
     },
     input: {
         borderWidth: 1,
         borderColor: "#ccc",
-        borderRadius: 8,
+        // borderRadius: 8,
         padding: 10,
-        marginBottom: 12,
+        // marginBottom: 12,
+    },
+    inputbox: {
+        borderWidth: 1,
+        borderColor: "#ccc",
+        // borderRadius: 8,
+        padding: 10,
+        textAlignVertical: "top",
+        // marginBottom: 12,
     },
     row: {
         flexDirection: "row",
         alignItems: "center",
         marginBottom: 12,
+        flexWrap: "wrap",
+        // justifyContent: "space-between",
     },
     label: {
         fontSize: 15,
@@ -187,20 +247,33 @@ const styles = StyleSheet.create({
     chip: {
         paddingVertical: 6,
         paddingHorizontal: 12,
-        borderRadius: 20,
+        // borderRadius: 20,
         borderWidth: 1,
         borderColor: "#ccc",
         marginRight: 8,
     },
+    chip2: {
+        // paddingVertical: 6,
+        // paddingHorizontal: 12,
+        paddingRight: 12,
+        // minWidth: 88,
+        // borderRadius: 20,
+        borderWidth: 1,
+        borderColor: "#ccc",
+        marginRight: 8,
+        marginBottom: 8,
+
+    },
     chipActive: {
-        backgroundColor: "#000",
+        backgroundColor: "#ededed8f",
         borderColor: "#000",
+        // borderWidth: 2,
     },
     chipText: {
         color: "#000",
     },
     chipTextActive: {
-        color: "#fff",
+        // color: "#fff",
     },
     btnRow: {
         flexDirection: "row",
@@ -210,7 +283,7 @@ const styles = StyleSheet.create({
     closeBtn: {
         backgroundColor: "gray",
         padding: 12,
-        borderRadius: 8,
+        // borderRadius: 8,
         flex: 1,
         marginRight: 5,
         alignItems: "center",
@@ -218,9 +291,51 @@ const styles = StyleSheet.create({
     saveBtn: {
         backgroundColor: "black",
         padding: 12,
-        borderRadius: 8,
+        // borderRadius: 8,
         flex: 1,
         marginLeft: 5,
         alignItems: "center",
+    },
+    inputRow: {
+        flexDirection: "row",
+        alignItems: "center",
+        marginBottom: 12,
+    },
+    lls: {
+        // padding: 5,
+        borderWidth: 1,
+        borderColor: "#ccc",
+        // width: 30,
+        // height: 30,
+        // marginRight: 10,
+        padding: 4.8,
+        borderRightWidth: 0,
+    },
+    lls2: {
+        // padding: 5,
+        borderRightWidth: 1,
+        borderColor: "#ccc",
+        // width: 30,
+        // height: 30,
+        marginRight: 10,
+        padding: 4.5,
+    },
+    icon: {
+        width: 30,
+        height: 30,
+        // marginRight: 10,
+        // borderWidth: 1,
+        // borderColor: "#ccc",
+        // borderRadius: 8,
+        // padding: 20,
+        // paddingHorizontal: 40,
+        // marginBottom: 12,
+
+        // flex: 1,
+    },
+    iconSmall: {
+        width: 25,
+        height: 25,
+        // borderRadius: 6,
     },
 });

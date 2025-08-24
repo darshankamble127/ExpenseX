@@ -21,15 +21,16 @@ const Dashboard = () => {
           else if (route.name === "Categories") iconName = "pricetag-sharp";
           else if (route.name === "Settings") iconName = "settings-sharp";
 
-          return <Ionicons name={iconName} size={size} color={color} />;
+          return <Ionicons name={iconName} size={size}  color={color} />;
         },
         tabBarActiveTintColor: "#000",   // text/icon color when active
         tabBarInactiveTintColor: "#00000059", // text/icon color when inactive
-        headerShown: false,                 //  hides the top header box
+        headerShown: false,   
         tabBarStyle: {
           backgroundColor: "#ffffffff",   // bottom nav background
           height: 55,                // height of bar
-          paddingBottom: 8,          // spacing for labels/icons
+          paddingBottom: 8,  
+          // spacing for labels/icons
         },
         tabBarLabelStyle: {
           fontSize: 13,              // text size

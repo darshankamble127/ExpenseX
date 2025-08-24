@@ -3,6 +3,8 @@ import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from "react-nati
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import DayTransactions from "./components/DayTransactions";
 import TransactionModal from "./components/TransactionModal";
+import { Ionicons } from "@expo/vector-icons";
+
 
 const STORAGE_KEY = "transactions";
 const daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
@@ -60,10 +62,12 @@ export default function Records() {
 
     const prevMonth = () => {
         setCurrentDate(new Date(year, month - 1, 1));
+        // setSelectedDate(1);
     };
 
     const nextMonth = () => {
         setCurrentDate(new Date(year, month + 1, 1));
+        // setSelectedDate(1);
     };
 
     // Helper to get full date string
@@ -129,8 +133,8 @@ export default function Records() {
                             {/* {hasData ? <Text style={{ fontSize: 10, color: "green" }}>●</Text> : null} */}
                             {/* Show total for the day */}
                             {hasData ? (
-                                <Text style={{ fontSize: 13,textAlign:"center",paddingTop:4, color: data[fullDateKey].total >= 0 ? "green" : "#c60000" }}>
-                                    {data[fullDateKey].total+" $"}
+                                <Text style={{ fontSize: 13,textAlign:"center",paddingTop:4, color: data[fullDateKey].total >= 0 ? "green" : "#ff7171ff" }}>
+                                    {data[fullDateKey].total>=0?`+₹${data[fullDateKey].total}`:`-₹${Math.abs(data[fullDateKey].total)}`}
                                 </Text>
                             ) : null}
                         </TouchableOpacity>
@@ -152,8 +156,10 @@ export default function Records() {
                 ) : (
                     <Text style={{ fontSize: 16, fontWeight: '600' }}>No date selected</Text>
                 )}
-                <Text style={{ fontSize: 14, fontWeight: '600' }}>
-                    TOTAL: {selectedDayData ? selectedDayData.total : 0}
+                <Text style={{ fontSize: 15, fontWeight: '600'}}>TOTAL:
+                <Text style={{ fontSize: 15, fontWeight: '600', color: selectedDayData ? (selectedDayData.total >= 0 ? "green" : "#ff7171ff") : "#000" }}>
+                     {selectedDayData ? selectedDayData.total>0?` +₹${selectedDayData.total}`:` -₹${selectedDayData.total}` : 0}
+                </Text>
                 </Text>
             </View>
             <ScrollView vertical={true} style={styles.menuContainer}>
@@ -168,19 +174,19 @@ export default function Records() {
             <TouchableOpacity
                 style={{
                     position: "absolute",
-                    bottom: 20,
-                    right: 20,
+                    bottom: 18,
+                    right: 10,
                     backgroundColor: "#000",
                     borderRadius: 30,
                     width: 60,
                     height: 60,
                     justifyContent: "center",
                     alignItems: "center",
-                    elevation: 5,
+                    elevation: 6,
                 }}
                 onPress={() => setModalVisible(true)}
             >
-                <Text style={{ color: "#fff", fontSize: 30, lineHeight: 30 }}>+</Text>
+                <Ionicons name="add-sharp" size={25} color="#fff" />
             </TouchableOpacity>    
             
             {/* TransactionModal usage should be controlled by state, example below */}
@@ -242,7 +248,9 @@ const styles = StyleSheet.create({
         color: "#000",
     },
     selectedBox: {
-        backgroundColor: "#000",
+        backgroundColor: "#000000ff",
+          elevation: 6,              //  hides the top header box
+        borderColor: "#000",
     },
     selectedText: {
         color: "#fff",

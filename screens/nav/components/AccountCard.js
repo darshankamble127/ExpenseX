@@ -51,14 +51,15 @@ const styles = StyleSheet.create({
   card: {
     display: "flex",
     flexDirection: "row",
-    height: 65,
+    // height: 65,
     marginBottom: 10,
     borderRadius: 0,
     justifyContent: "space-between",
     alignItems: "center",
-    padding: 14,
+    // padding: 14,
     borderWidth: 1,
     borderColor: "#212224",
+    // backgroundColor: "#ffd7d7ff",
   },
   leftSide: {
     display: "flex",
@@ -86,15 +87,14 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   lls: {
-    padding: 5,
-    borderWidth: 1,
+    padding: 6,
+    borderRightWidth: 1,
     borderColor: "#212224",
     marginRight: 10,
   },
   image: {
-    width: 30,
-    height: 30,
-    // borderRadius: 25, // Make it round
+    width: 39,
+    height: 39,
   },
   errorText: {
     fontSize: 14,
