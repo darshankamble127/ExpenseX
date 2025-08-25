@@ -25,7 +25,9 @@ const AccountCard = ({ title, value, imageUrl }) => {
         </View>
         <View style={styles.lrs}>
           <Text style={styles.title}>{title}</Text>
-          <Text style={styles.value}>Balance : {value}</Text>
+          <Text style={styles.value}>
+            Balance : {""}
+            <Text style={[value > 0 ? { color: "#107503ff" } : { color: "#bb0303ff" }]}>{value > 0 ? ` ₹${value}` : ` -₹${Math.abs(value)}`}</Text></Text>
         </View>
       </View>
       <View style={styles.rightSide}>
@@ -58,7 +60,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     // padding: 14,
     borderWidth: 1,
-    borderColor: "#212224",
+    borderColor: "#ccc",
     // backgroundColor: "#ffd7d7ff",
   },
   leftSide: {
@@ -70,7 +72,7 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
     alignItems: "flex-end",
-    justifyContent:"flex-end"
+    justifyContent: "flex-end"
   },
   tab: {
     // height: 50,
@@ -78,23 +80,24 @@ const styles = StyleSheet.create({
     // borderRadius: 10,
     justifyContent: "center",
     // alignItems: "left",
-    paddingLeft: 10,
+    // paddingLeft: 20,
+    marginRight: 14,
   },
   title: {
     fontSize: 17,
   },
   value: {
-    fontSize: 14,
+    fontSize: 15,
   },
   lls: {
-    padding: 6,
+    padding: 8,
     borderRightWidth: 1,
-    borderColor: "#212224",
+    borderColor: "#ccc",
     marginRight: 10,
   },
   image: {
-    width: 39,
-    height: 39,
+    width: 40,
+    height: 40,
   },
   errorText: {
     fontSize: 14,

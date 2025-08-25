@@ -1,39 +1,100 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, Button, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, Alert } from "react-native";
 import { getData, removeData } from "../../utils/storage";
+import { Ionicons } from "@expo/vector-icons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Settings = ({ navigation }) => {
   const [uniqueKey, setUniqueKey] = useState("");
+  const [userName, setUserName] = useState("John Doe"); // replace with real name if stored
 
   useEffect(() => {
     const fetchKey = async () => {
       const key = await getData("uniqueKey");
-      setUniqueKey(key || "No key found");
+      setUniqueKey(key || "No ID found");
+      const name = await getData("name");
+      setUserName(name || "No Name found");
     };
     fetchKey();
   }, []);
 
-  const handleClearKey = async () => {
-    await removeData("uniqueKey");
-    navigation.reset({
-      index: 0,
-      routes: [{ name: "LoaderScreen" }],
-    });
-  };
+  const handleDeleteAndReset = async () => {
+  try {
+    await AsyncStorage.clear(); // this removes ALL keys and values
+    console.log("All data deleted from AsyncStorage ✅");
+  } catch (error) {
+    console.log("Error clearing data", error);
+  }
+};
+
+  const handleProVersion = () => Alert.alert("Pro version coming soon!");
+  const handleLikeApp = () => Alert.alert("Thanks for liking the app!");
+  const handleHelp = () => Alert.alert("Help section not ready yet.");
+  const handleFeedback = () => Alert.alert("Feedback option not ready yet.");
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Settings</Text>
-      <Text style={styles.keyText}>Unique Key: {uniqueKey}</Text>
-      <Button title="Clear Key & Logout" onPress={handleClearKey} />
+      {/* Top black section */}
+      <View style={styles.topBox}>
+        <Text style={styles.title}>Settings</Text>
+      </View>
+
+      {/* User Info */}
+      <View style={styles.userBox}>
+        <Text style={styles.userName}>{userName}</Text>
+        <Text style={styles.userId}>ID: {uniqueKey}</Text>
+      </View>
+
+      {/* Options */}
+      <View style={styles.optionsBox}>
+        <OptionItem
+          icon="trash-bin-sharp"
+          text="Delete & Reset"
+          onPress={handleDeleteAndReset}
+        />
+        <OptionItem icon="star" text="Pro Version" onPress={handleProVersion} />
+        <OptionItem icon="heart" text="Like this App" onPress={handleLikeApp} />
+        <OptionItem icon="help-circle" text="Help" onPress={handleHelp} />
+        <OptionItem icon="chatbox-sharp" text="Feedback" onPress={handleFeedback} />
+      </View>
     </View>
   );
 };
 
+const OptionItem = ({ icon, text, onPress }) => (
+  <TouchableOpacity style={styles.option} onPress={onPress}>
+    <Ionicons name={icon} size={22} color="black" style={{ marginRight: 10 }} />
+    <Text style={styles.optionText}>{text}</Text>
+  </TouchableOpacity>
+);
+
 export default Settings;
 
 const styles = StyleSheet.create({
-  container: { flex: 1, justifyContent: "center", alignItems: "center" },
-  title: { fontSize: 22, fontWeight: "bold", marginBottom: 20 },
-  keyText: { fontSize: 16, marginBottom: 20 },
+  container: { flex: 1, backgroundColor: "#fff" },
+
+  topBox: {
+    height: "25%",
+    backgroundColor: "black",
+    paddingTop: 40,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  title: { fontSize: 22, fontWeight: "bold", color: "white" },
+
+  userBox: {paddingHorizontal: 20,  marginVertical: 20 },
+  userName: { fontSize: 18, fontWeight: "600" },
+  userId: { fontSize: 14, color: "gray", marginTop: 5
+    
+   },
+
+  optionsBox: { paddingHorizontal: 20 },
+  option: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingVertical: 15,
+    borderBottomWidth: 1,
+    borderBottomColor: "#eee",
+  },
+  optionText: { fontSize: 16 },
 });

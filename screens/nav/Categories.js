@@ -3,38 +3,29 @@ import {
     View,
     Text,
     StyleSheet,
-    ScrollView,
     TouchableOpacity,
     TextInput,
     Image,
     Alert,
+    Dimensions,
 } from "react-native";
-import Card from "./components/CategoryCard";
 import { MaterialIcons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import CategoryEditor from "./components/CategoryEditor";
 
 const STORAGE_KEY = "CATEGORIES_DATA";
+const { height } = Dimensions.get("window");
 
 export default function Categories() {
-    const [selectedType, setSelectedType] = useState("expense"); // default: expense
+    const [selectedType, setSelectedType] = useState("expense");
     const [search, setSearch] = useState("");
-    const [showIcons, setShowIcons] = useState(false); // toggle icons section
-    const [selectedIcon, setSelectedIcon] = useState(null); // selected image
+    const [showIcons, setShowIcons] = useState(false);
+    const [selectedIcon, setSelectedIcon] = useState(null);
     const [categoriesData, setCategoriesData] = useState({ income: [], expense: [] });
+    const [modalVisible, setModalVisible] = useState(false);
+
 
     const iconsList = [
-        "https://notebook-covers.s3.us-west-2.amazonaws.com/d7b60dc582c57e0ba5043bd4be90a158",
-        "https://notebook-covers.s3.us-west-2.amazonaws.com/05447a975db2b5bb4397386c5c2fdc29",
-        "https://notebook-covers.s3.us-west-2.amazonaws.com/39b121b3665570fde815cc5b003dfd85",
-        "https://notebook-covers.s3.us-west-2.amazonaws.com/92f17ac11682913ee5640c2c8c8b1dfc",
-        "https://notebook-covers.s3.us-west-2.amazonaws.com/d7b60dc582c57e0ba5043bd4be90a158",
-        "https://notebook-covers.s3.us-west-2.amazonaws.com/05447a975db2b5bb4397386c5c2fdc29",
-        "https://notebook-covers.s3.us-west-2.amazonaws.com/39b121b3665570fde815cc5b003dfd85",
-        "https://notebook-covers.s3.us-west-2.amazonaws.com/92f17ac11682913ee5640c2c8c8b1dfc",
-        "https://notebook-covers.s3.us-west-2.amazonaws.com/d7b60dc582c57e0ba5043bd4be90a158",
-        "https://notebook-covers.s3.us-west-2.amazonaws.com/05447a975db2b5bb4397386c5c2fdc29",
-        "https://notebook-covers.s3.us-west-2.amazonaws.com/39b121b3665570fde815cc5b003dfd85",
-        "https://notebook-covers.s3.us-west-2.amazonaws.com/92f17ac11682913ee5640c2c8c8b1dfc",
         "https://notebook-covers.s3.us-west-2.amazonaws.com/d7b60dc582c57e0ba5043bd4be90a158",
         "https://notebook-covers.s3.us-west-2.amazonaws.com/05447a975db2b5bb4397386c5c2fdc29",
         "https://notebook-covers.s3.us-west-2.amazonaws.com/39b121b3665570fde815cc5b003dfd85",
@@ -47,7 +38,6 @@ export default function Categories() {
         { title: "Refunds", imageUrl: iconsList[1] },
         { title: "Rental", imageUrl: iconsList[2] },
         { title: "Salary", imageUrl: iconsList[3] },
-        { title: "Sale", imageUrl: iconsList[0] },
     ];
 
     const defaultExpense = [
@@ -60,7 +50,7 @@ export default function Categories() {
         { title: "Transportation", imageUrl: iconsList[2] },
     ];
 
-    // --- Load data from AsyncStorage
+    // Load categories
     useEffect(() => {
         const loadData = async () => {
             try {
@@ -68,7 +58,6 @@ export default function Categories() {
                 if (stored) {
                     setCategoriesData(JSON.parse(stored));
                 } else {
-                    // save defaults if no data
                     const defaults = { income: defaultIncome, expense: defaultExpense };
                     setCategoriesData(defaults);
                     await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(defaults));
@@ -80,7 +69,7 @@ export default function Categories() {
         loadData();
     }, []);
 
-    // --- Save new category
+    // Add new category
     const handleAddCategory = async () => {
         if (!search.trim()) {
             Alert.alert("Enter a name for the category");
@@ -107,7 +96,6 @@ export default function Categories() {
         }
     };
 
-    // Filter based on selected type and search
     const categories = categoriesData[selectedType] || [];
     const filteredCategories = categories.filter((item) =>
         item.title.toLowerCase().includes(search.toLowerCase())
@@ -115,36 +103,16 @@ export default function Categories() {
 
     return (
         <View style={styles.container}>
-            {/* Toggle Buttons */}
-            {/* Toggle Buttons */}
-            <View style={styles.toggleRow}>
-                {["income", "expense"].map((type) => (
-                    <TouchableOpacity
-                        key={type}
-                        style={[
-                            styles.toggleBtn,
-                            selectedType === type && styles.toggleActive,
-                            type==="income"&&{marginRight:5}
-                        ]}
-                        onPress={() => setSelectedType(type)}
-                    >
-                        <Text
-                            style={
-                                selectedType === type
-                                    ? styles.toggleTextActive
-                                    : styles.toggleText
-                            }
-                        >
-                            {type.charAt(0).toUpperCase() + type.slice(1)}
-                        </Text>
-                    </TouchableOpacity>
-                ))}
+            {/* Black Header 25% of screen */}
+            <View style={styles.headerBox}>
+                <Text style={styles.headerText}>
+                    Add / Edit Categories
+                </Text>
             </View>
 
 
             {/* Search + Add */}
             <View style={styles.searchRow}>
-                {/* Image button */}
                 <TouchableOpacity
                     style={styles.lls}
                     onPress={() => setShowIcons(!showIcons)}
@@ -170,46 +138,64 @@ export default function Categories() {
                 </TouchableOpacity>
             </View>
 
-            {/* Show icons row if clicked */}
+
+
+
+            {/* Icons List */}
             {showIcons && (
-                <View
-                    horizontal
-                    showsHorizontalScrollIndicator={false}
-                    style={styles.iconsRow}
-                >
+                <View style={styles.iconsRow}>
                     {iconsList.map((url, index) => (
                         <TouchableOpacity
                             key={index}
                             onPress={() => {
                                 setSelectedIcon(url);
-                                setShowIcons(false); // hide after selection
+                                setShowIcons(false);
                             }}
-                            style={[styles.showIconsTouchable, selectedIcon === url && styles.iconSelected]}
+                            style={[
+                                styles.showIconsTouchable,
+                                selectedIcon === url && styles.iconSelected,
+                            ]}
                         >
-                            <Image
-                                source={{ uri: url }}
-                                style={[
-                                    styles.iconOption,
-                                ]}
-                            />
+                            <Image source={{ uri: url }} style={styles.iconOption} />
                         </TouchableOpacity>
                     ))}
                 </View>
             )}
+            {/* Toggle Buttons */}
+            <View style={styles.toggleRow}>
+                {["income", "expense"].map((type) => (
+                    <TouchableOpacity
+                        key={type}
+                        style={[
+                            styles.toggleBtn,
+                            selectedType === type && styles.toggleActive,
+                            type === "income" && { marginRight: 5 },
+                        ]}
+                        onPress={() => setSelectedType(type)}
+                    >
+                        <Text
+                            style={
+                                selectedType === type
+                                    ? styles.toggleTextActive
+                                    : styles.toggleText
+                            }
+                        >
+                            {type.charAt(0).toUpperCase() + type.slice(1)}
+                        </Text>
+                    </TouchableOpacity>
+                ))}
+            </View>
 
             {/* Categories List */}
-            {/* <ScrollView> */}
             <View style={styles.CardContainer}>
                 {filteredCategories.map((item, index) => (
-                    // <Card key={index} title={item.title} imageUrl={item.imageUrl} />
                     <TouchableOpacity
                         key={index}
+                        onPress={() => setModalVisible(true)}
                         style={[
                             styles.chip2,
-                            // account === acc && styles.chipActive,
-                            { flexDirection: "row", alignItems: "center" }
+                            { flexDirection: "row", alignItems: "center" },
                         ]}
-                        onPress={() => setAccount(acc)}
                     >
                         <View style={styles.lls2}>
                             <Image
@@ -217,13 +203,12 @@ export default function Categories() {
                                 style={styles.iconSmall}
                             />
                         </View>
-                        <Text style={styles.chipText}>
-                            {item.title}
-                        </Text>
+                        <Text style={styles.chipText}>{item.title}</Text>
                     </TouchableOpacity>
                 ))}
+                {/* <CategoryEditor modalVisible={modalVisible} setModalVisible={setModalVisible} imageUrl={item.imageUrl} title={item.title} STORAGE_KEY={STORAGE_KEY} /> */}
             </View>
-            {/* </ScrollView> */}
+
         </View>
     );
 }
@@ -231,40 +216,56 @@ export default function Categories() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        paddingHorizontal: 8,
-        paddingTop: 50,
         backgroundColor: "#fff",
+    },
+    headerBox: {
+        height: height * 0.25,
+        backgroundColor: "#000",
+        justifyContent: "center",
+        alignItems: "center",
+        paddingTop: 50,
+
+    },
+    headerText: {
+        fontSize: 24,
+        color: "#fff",
+        fontWeight: "bold",
     },
     toggleRow: {
         flexDirection: "row",
-        justifyContent: "center",
-        marginBottom: 15,
+        // justifyContent: "center",
+        // marginVertical: 15,
+        marginBottom: 10,
+        paddingHorizontal: 8,
     },
     toggleBtn: {
-        flex: 1,
-        paddingVertical: 10,
+        // flex: 1,
+        paddingVertical: 6,
+        paddingHorizontal: 12,
         borderWidth: 1,
         borderColor: "#ccc",
-        // borderRadius: 8,
-        // marginHorizontal: 5,
         alignItems: "center",
+        marginRight: 8,
     },
     toggleActive: {
-        backgroundColor: "#000",
+        backgroundColor: "#000000ff",
+        borderColor: "#000",
     },
     toggleText: {
-        fontSize: 16,
+        // fontSize: 16,
         color: "#000",
     },
     toggleTextActive: {
-        fontSize: 16,
+        // fontSize: 16,
         color: "#fff",
-        fontWeight: "bold",
+        // fontWeight: "bold",
     },
     searchRow: {
         flexDirection: "row",
         alignItems: "center",
         marginBottom: 10,
+        marginTop: 10,
+        paddingHorizontal: 8,
     },
     input: {
         flex: 1,
@@ -282,6 +283,7 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         flexWrap: "wrap",
         justifyContent: "flex-start",
+        paddingHorizontal: 8,
     },
     lls: {
         borderWidth: 1,
@@ -290,18 +292,14 @@ const styles = StyleSheet.create({
         borderRightWidth: 0,
     },
     lls2: {
-        // padding: 5,
         borderRightWidth: 1,
         borderColor: "#ccc",
-        // width: 30,
-        // height: 30,
         marginRight: 10,
         padding: 4.5,
     },
     iconSmall: {
         width: 35,
         height: 35,
-        // borderRadius: 6,
     },
     icon: {
         width: 35,
@@ -309,53 +307,33 @@ const styles = StyleSheet.create({
     },
     iconsRow: {
         marginBottom: 15,
-        display: "grid",
         flexDirection: "row",
         flexWrap: "wrap",
-        // borderColor: "#ccc",
-        // borderWidth: 1,
-        // height: ,
+        paddingHorizontal: 8,
     },
     iconOption: {
         width: 35,
         height: 35,
-        // borderRadius: 25,
-        // marginHorizontal: 5,
-        // borderWidth: 2,
-        // borderColor: "transparent",
     },
     iconSelected: {
         borderColor: "black",
     },
     showIconsTouchable: {
         marginRight: 10,
-        // padding: 5,
         borderColor: "#ccc",
         borderWidth: 1,
         padding: 5,
         marginBottom: 10,
     },
     chip2: {
-        // paddingVertical: 6,
-        // paddingHorizontal: 12,
         paddingRight: 12,
         minWidth: 115,
-        // borderRadius: 20,
         borderWidth: 1,
         borderColor: "#ccc",
         marginRight: 8,
         marginBottom: 8,
-
-    },
-    chipActive: {
-        backgroundColor: "#ededed8f",
-        borderColor: "#000",
-        // borderWidth: 2,
     },
     chipText: {
         color: "#000",
-    },
-    chipTextActive: {
-        // color: "#fff",
     },
 });

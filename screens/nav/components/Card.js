@@ -44,7 +44,7 @@ export default function Card({ title, debitFrom, cost, imageUrl, type, notes}) {
 
         <View style={[styles.tab]}>
           <Text style={type == "income" ? styles.income : styles.expenses}>
-            {type == "income" ? `+₹${cost}` : `-₹${Math.abs(cost)}`}
+            {type == "income" ? `₹${cost}` : `-₹${Math.abs(cost)}`}
           </Text>
         </View>
       </View>
