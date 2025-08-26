@@ -27,7 +27,7 @@ const AccountCard = ({ title, value, imageUrl }) => {
           <Text style={styles.title}>{title}</Text>
           <Text style={styles.value}>
             Balance : {""}
-            <Text style={[value > 0 ? { color: "#107503ff" } : { color: "#bb0303ff" }]}>{value > 0 ? ` ₹${value}` : ` -₹${Math.abs(value)}`}</Text></Text>
+            <Text style={[value >= 0 ? { color: "#107503ff" } : { color: "#bb0303ff" }]}>{value >= 0 ? ` ₹${value}` : ` -₹${Math.abs(value)}`}</Text></Text>
         </View>
       </View>
       <View style={styles.rightSide}>
@@ -40,7 +40,7 @@ const AccountCard = ({ title, value, imageUrl }) => {
         </TouchableOpacity> */}
 
         <TouchableOpacity style={[styles.tab]}>
-          <MaterialIcons name="more-vert" size={24} color="#212224" />
+          {/* <MaterialIcons name="more-vert" size={24} color="#212224" /> */}
         </TouchableOpacity>
 
 
