@@ -49,6 +49,12 @@ export default function Accounts() {
             imageUrl:
               "https://notebook-covers.s3.us-west-2.amazonaws.com/39b121b3665570fde815cc5b003dfd85",
           },
+          {
+            name: "Transfer",
+            balance: 0,
+            imageUrl:
+              "https://notebook-covers.s3.us-west-2.amazonaws.com/92f17ac11682913ee5640c2c8c8b1dfc",
+          },
         ];
         setAccounts(defaultAccounts);
         await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(defaultAccounts));
@@ -147,7 +153,7 @@ export default function Accounts() {
       </View>
 
       {/* Modal */}
-      <Modal visible={!!selectedAccount} transparent animationType="slide">
+      <Modal visible={!!selectedAccount} transparent animationType="fade">
         <View style={styles.modalContainer}>
           <View style={styles.modalBox}>
             <Text style={styles.modalTitle}>

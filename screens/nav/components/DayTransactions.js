@@ -38,6 +38,6 @@ const styles = StyleSheet.create({
     display: "flex",
     paddingHorizontal: 10,
     marginBottom: 100,
-    
+    // backgroundColor: "#f0f0f0",
   },
 });

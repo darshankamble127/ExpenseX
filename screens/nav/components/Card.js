@@ -58,12 +58,13 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     // height: 65,
     // marginBottom: 10,
-    borderRadius: 10,
+    // borderRadius: 10,
     justifyContent: "space-between",
     alignItems: "center",
     paddingVertical: 7,
     borderBottomWidth: 1,
-    borderBottomColor: "#e1e1e1df",
+    borderBottomColor: "#cccccc89",
+    
   },
   leftSide: {
     display: "flex",
@@ -94,10 +95,13 @@ const styles = StyleSheet.create({
   lls: {
     paddingHorizontal: 5,
     paddingVertical: 5,
-    borderWidth: 1,
-    borderColor: "#000000ff",
+    // borderWidth: 1,
+    // borderColor: "#ccc",
     marginRight: 10,
-    borderRadius: 0, // 25 Make it round
+    // borderRadius: 6, // 25 Make it round
+    backgroundColor: "#ffffffdf",
+    // elevation: 6, // Shadow for Android
+
   },
   lls2: {
     // padding: 5,
@@ -109,8 +113,8 @@ const styles = StyleSheet.create({
     padding: 4.5,
   },
   image: {
-    width: 40,
-    height: 40,
+    width: 37, 
+    height: 37,
   },
   errorText: {
     fontSize: 14,
@@ -119,13 +123,13 @@ const styles = StyleSheet.create({
   expenses: {
     fontSize: 15,
     // fontWeight: "bold",
-    color: "#bb0303ff",
+    color: "#b43029ff",
     fontWeight: '600'
   },
   income: {
     fontSize: 15,
     // fontWeight: "bold",
-    color: "#107503ff",
+    color: "#265f3aff",
     fontWeight: '600'
   },
 });

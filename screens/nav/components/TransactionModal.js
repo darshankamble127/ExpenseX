@@ -16,7 +16,17 @@ export default function TransactionModal({ modalVisible, setModalVisible, onSave
     const [isIncludedInTotal, setIsIncludedInTotal] = useState(true);
     const [imageUrl, setImageUrl] = useState("https://notebook-covers.s3.us-west-2.amazonaws.com/d7b60dc582c57e0ba5043bd4be90a158");
 
+    
+    
     const handleSave = async () => {
+        if (!amount.trim()) {
+            Alert.alert("Enter a valid amount");
+            return;
+        }
+        if (!category.trim()) {
+            Alert.alert("Enter a valid category");
+            return;
+        }
         const now = new Date();
         const dateKey = now.toLocaleDateString();
         const newTransaction = {
@@ -97,7 +107,7 @@ export default function TransactionModal({ modalVisible, setModalVisible, onSave
 
 
     return (
-        <Modal visible={modalVisible} transparent animationType="slide">
+        <Modal visible={modalVisible} transparent animationType="fade">
             <View style={styles.modalOverlay}>
                 <View style={styles.modalContent}>
                     <Text style={styles.title}>Add Transaction</Text>
@@ -132,6 +142,7 @@ export default function TransactionModal({ modalVisible, setModalVisible, onSave
                             value={amount}
                             onChangeText={setAmount}
                             keyboardType="numeric"
+                            placeholderTextColor="#b6b5b5ff"
                             style={styles.amountInput}
                         />
                     </View>
@@ -229,7 +240,7 @@ const styles = StyleSheet.create({
         alignItems: "center",
     },
     modalContent: {
-        width: "85%",
+        width: "89%",
         backgroundColor: "#fff",
         // borderRadius: 12,
         padding: 20,
@@ -307,8 +318,8 @@ const styles = StyleSheet.create({
     },
     closeBtn: {
         // backgroundColor: "gray",
-        borderColor:"#ccc",
-        borderWidth:1,
+        borderColor: "#ccc",
+        borderWidth: 1,
         padding: 12,
         // borderRadius: 8,
         flex: 1,
@@ -316,8 +327,8 @@ const styles = StyleSheet.create({
         alignItems: "center",
     },
     saveBtn: {
-        borderColor:"#000000ff",
-        borderWidth:1,
+        borderColor: "#000000ff",
+        borderWidth: 1,
         backgroundColor: "#000000ff",
         padding: 12,
         // borderRadius: 8,

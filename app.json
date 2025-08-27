@@ -1,8 +1,9 @@
 {
   "expo": {
-    "name": "v1",
-    "slug": "v1",
+    "name": "ExpenseX",
+    "slug": "Track your expenses, stay in control of your money",
     "version": "1.0.0",
+    "icon": "./assets/logo.png",
     "extra": {
       "eas": {
         "projectId": "d2ce2d98-4356-42d1-9014-4d161adfe65c"

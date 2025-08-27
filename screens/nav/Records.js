@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import DayTransactions from "./components/DayTransactions";
 import TransactionModal from "./components/TransactionModal";
 import { Ionicons } from "@expo/vector-icons";
+import { useFocusEffect } from "@react-navigation/native";
 
 
 const STORAGE_KEY = "transactions";
@@ -60,6 +61,8 @@ export default function Records() {
         loadData();
     }, [modalVisible, month, year]); // reload when modal closes or month/year changes
 
+
+
     const prevMonth = () => {
         setCurrentDate(new Date(year, month - 1, 1));
         // setSelectedDate(1);
@@ -114,10 +117,11 @@ export default function Records() {
                             key={index}
                             style={[
                                 styles.dateBox,
-                                !date && { borderWidth: 0 }, // no border for empty slots
                                 isSelected && styles.selectedBox,
+                                { elevation: 6 },
+                                !date && { borderWidth: 0, elevation: 0 }, // no border for empty slots
                             ]}
-                            
+
                             onPress={() => date && setSelectedDate(date)}
                             activeOpacity={0.7}
                         >
@@ -135,8 +139,8 @@ export default function Records() {
                             {/* {hasData ? <Text style={{ fontSize: 10, color: "green" }}>●</Text> : null} */}
                             {/* Show total for the day */}
                             {hasData ? (
-                                <Text style={{ fontSize: 13,textAlign:"center",paddingTop:4, color: data[fullDateKey].total >= 0 ? "green" : "#be1515ff" }}>
-                                    {data[fullDateKey].total>=0?`₹${data[fullDateKey].total}`:`-₹${Math.abs(data[fullDateKey].total)}`}
+                                <Text style={{ fontSize: 13, textAlign: "center", paddingTop: 2, color: data[fullDateKey].total >= 0 ? "green" : "#be1515ff" }}>
+                                    {data[fullDateKey].total >= 0 ? `₹${data[fullDateKey].total}` : `-₹${Math.abs(data[fullDateKey].total)}`}
                                 </Text>
                             ) : null}
                         </TouchableOpacity>
@@ -158,10 +162,10 @@ export default function Records() {
                 ) : (
                     <Text style={{ fontSize: 16, fontWeight: '600' }}>No date selected</Text>
                 )}
-                <Text style={{ fontSize: 15, fontWeight: '600'}}>TOTAL:
-                <Text style={{ fontSize: 15, fontWeight: '600', color: selectedDayData ? (selectedDayData.total >= 0 ? "green" : "#be1515ff") : "#000" }}>
-                     {selectedDayData ? selectedDayData.total>0?` ₹${selectedDayData.total}`:` -₹${Math.abs(selectedDayData.total)}` : 0}
-                </Text>
+                <Text style={{ fontSize: 15, fontWeight: '600' }}>TOTAL:
+                    <Text style={{ fontSize: 15, fontWeight: '600', color: selectedDayData ? (selectedDayData.total >= 0 ? "#265f3aff" : "#b43029ff") : "#000" }}>
+                        {selectedDayData ? selectedDayData.total > 0 ? ` ₹${selectedDayData.total}` : ` -₹${Math.abs(selectedDayData.total)}` : 0}
+                    </Text>
                 </Text>
             </View>
             <ScrollView vertical={true} style={styles.menuContainer}>
@@ -189,10 +193,10 @@ export default function Records() {
                 onPress={() => setModalVisible(true)}
             >
                 <Ionicons name="add-sharp" size={25} color="#fff" />
-            </TouchableOpacity>    
-            
+            </TouchableOpacity>
+
             {/* TransactionModal usage should be controlled by state, example below */}
-            <TransactionModal modalVisible={modalVisible} setModalVisible={setModalVisible}  />
+            <TransactionModal modalVisible={modalVisible} setModalVisible={setModalVisible} />
         </View>
     );
 }
@@ -212,6 +216,8 @@ const styles = StyleSheet.create({
     arrow: {
         fontSize: 24,
         fontWeight: "bold",
+        elevation: 6,
+
     },
     monthText: {
         fontSize: 20,
@@ -238,20 +244,21 @@ const styles = StyleSheet.create({
     dateBox: {
         width: `${92 / 7}%`,
         height: 50,
-        paddingLeft: 5,
         backgroundColor: "#ffffffff",
         borderWidth: 1,
-        borderColor: "#b7b7b7ff",
+        borderColor: "#cccccc89",
         margin: 2,
-
+        // borderRadius: 6,
+        elevation: 2,              //  hides the top header box
+        
     },
     dateText: {
+        paddingLeft: 5,
         fontSize: 14,
         color: "#000",
     },
     selectedBox: {
         backgroundColor: "#000000ff",
-          elevation: 6,              //  hides the top header box
         borderColor: "#000",
     },
     selectedText: {

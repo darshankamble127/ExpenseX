@@ -1,36 +1,64 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, TouchableOpacity, Alert } from "react-native";
-import { getData, removeData } from "../../utils/storage";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Alert,
+} from "react-native";
+import { getData } from "../../utils/storage";
 import { Ionicons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Settings = ({ navigation }) => {
   const [uniqueKey, setUniqueKey] = useState("");
-  const [userName, setUserName] = useState("John Doe"); // replace with real name if stored
+  const [userName, setUserName] = useState("John Doe");
 
   useEffect(() => {
     const fetchKey = async () => {
       const key = await getData("uniqueKey");
-      setUniqueKey(key || "No ID found");
       const name = await getData("name");
-      setUserName(name || "No Name found");
+
+      setUniqueKey(key || "no-id");
+      setUserName(name || "No Name");
     };
     fetchKey();
   }, []);
 
-  const handleDeleteAndReset = async () => {
-  try {
-    await AsyncStorage.clear(); // this removes ALL keys and values
-    console.log("All data deleted from AsyncStorage ✅");
-  } catch (error) {
-    console.log("Error clearing data", error);
-  }
-};
+  const handleDeleteAndReset = () => {
+    Alert.alert(
+      "Confirm Reset",
+      "Are you sure you want to delete all data and restart?",
+      [
+        { text: "Cancel", style: "cancel" },
+        {
+          text: "Yes, Delete",
+          style: "destructive",
+          onPress: async () => {
+            try {
+              await AsyncStorage.clear();
+              console.log("All data deleted ✅");
+              navigation.reset({
+                index: 0,
+                routes: [{ name: "LoaderScreen" }],
+              });
+            } catch (error) {
+              console.log("Error clearing data", error);
+            }
+          },
+        },
+      ]
+    );
+  };
 
-  const handleProVersion = () => Alert.alert("Pro version coming soon!");
-  const handleLikeApp = () => Alert.alert("Thanks for liking the app!");
-  const handleHelp = () => Alert.alert("Help section not ready yet.");
-  const handleFeedback = () => Alert.alert("Feedback option not ready yet.");
+  const handleProVersion = () =>
+    Alert.alert("Pro version coming soon!");
+  const handleLikeApp = () =>
+    Alert.alert("Thanks for liking the app!");
+  const handleHelp = () =>
+    Alert.alert("Help section not ready yet.");
+  const handleFeedback = () =>
+    Alert.alert("Feedback option not ready yet.");
 
   return (
     <View style={styles.container}>
@@ -48,14 +76,30 @@ const Settings = ({ navigation }) => {
       {/* Options */}
       <View style={styles.optionsBox}>
         <OptionItem
-          icon="trash-bin-sharp"
+          icon="trash-bin"
           text="Delete & Reset"
           onPress={handleDeleteAndReset}
         />
-        <OptionItem icon="star" text="Pro Version" onPress={handleProVersion} />
-        <OptionItem icon="heart" text="Like this App" onPress={handleLikeApp} />
-        <OptionItem icon="help-circle" text="Help" onPress={handleHelp} />
-        <OptionItem icon="chatbox-sharp" text="Feedback" onPress={handleFeedback} />
+        <OptionItem
+          icon="star"
+          text="Pro Version"
+          onPress={handleProVersion}
+        />
+        <OptionItem
+          icon="heart"
+          text="Like this App"
+          onPress={handleLikeApp}
+        />
+        <OptionItem
+          icon="help-circle"
+          text="Help"
+          onPress={handleHelp}
+        />
+        <OptionItem
+          icon="chatbox"
+          text="Feedback"
+          onPress={handleFeedback}
+        />
       </View>
     </View>
   );
@@ -63,7 +107,12 @@ const Settings = ({ navigation }) => {
 
 const OptionItem = ({ icon, text, onPress }) => (
   <TouchableOpacity style={styles.option} onPress={onPress}>
-    <Ionicons name={icon} size={22} color="black" style={{ marginRight: 10 }} />
+    <Ionicons
+      name={icon}
+      size={22}
+      color="black"
+      style={{ marginRight: 10 }}
+    />
     <Text style={styles.optionText}>{text}</Text>
   </TouchableOpacity>
 );
@@ -82,11 +131,16 @@ const styles = StyleSheet.create({
   },
   title: { fontSize: 22, fontWeight: "bold", color: "white" },
 
-  userBox: {paddingHorizontal: 20,  marginVertical: 20 },
+  userBox: {
+    paddingHorizontal: 20,
+    marginVertical: 20,
+  },
   userName: { fontSize: 18, fontWeight: "600" },
-  userId: { fontSize: 14, color: "gray", marginTop: 5
-    
-   },
+  userId: {
+    fontSize: 14,
+    color: "gray",
+    marginTop: 5,
+  },
 
   optionsBox: { paddingHorizontal: 20 },
   option: {

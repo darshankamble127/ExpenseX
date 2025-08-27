@@ -167,6 +167,8 @@ export default function Categories() {
                     style={styles.input}
                     placeholder="Enter category name..."
                     value={search}
+                            placeholderTextColor="#b6b5b5ff"
+
                     onChangeText={setSearch}
                 />
                 <TouchableOpacity style={styles.addBtn} onPress={handleAddCategory}>
@@ -244,7 +246,7 @@ export default function Categories() {
                 ))}
             </View>
             {/* Edit Modal */}
-            <Modal visible={modalVisible} transparent animationType="slide">
+            <Modal visible={modalVisible} transparent animationType="fade">
                 <View style={styles.modalContainer}>
                     <View style={styles.modalBox}>
                         <Text style={styles.modalTitle}>Edit Category</Text>

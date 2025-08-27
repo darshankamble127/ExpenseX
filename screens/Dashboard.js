@@ -24,7 +24,7 @@ const Dashboard = () => {
           return <Ionicons name={iconName} size={size}  color={color} />;
         },
         tabBarActiveTintColor: "#000",   // text/icon color when active
-        tabBarInactiveTintColor: "#00000059", // text/icon color when inactive
+        tabBarInactiveTintColor: "#938e8eff", // text/icon color when inactive
         headerShown: false,   
         tabBarStyle: {
           backgroundColor: "#ffffffff",   // bottom nav background

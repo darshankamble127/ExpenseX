@@ -60,8 +60,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     // padding: 14,
     borderWidth: 1,
-    borderColor: "#ccc",
-    // backgroundColor: "#ffd7d7ff",
+    borderColor: "#cccccc8a",
+    backgroundColor: "#ffffffff",
+    elevation: 2, // Shadow for Android
   },
   leftSide: {
     display: "flex",
@@ -92,7 +93,7 @@ const styles = StyleSheet.create({
   lls: {
     padding: 8,
     borderRightWidth: 1,
-    borderColor: "#ccc",
+    borderColor: "#cccccc8a",
     marginRight: 10,
   },
   image: {
